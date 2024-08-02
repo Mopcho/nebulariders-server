@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtsnfgglbywa3"]
+
+[sub_resource type="GDScript" id="GDScript_km8lp"]
+script/source = "extends Node2D
+
+var http_request = HTTPRequest.new()
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	add_child(http_request)
+	http_request.request_completed.connect(self._on_request_completed)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+
+func _on_request_completed(result, response_code, headers, body):
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	print(json)
+
+var user_json = '{ \"email\": \"stoyan\", \"password\": \"123456\" }'
+
+func _on_login_clicked():
+	print(\"im sending the login\")
+	http_request.request(\"http://localhost:8081/api/auth/login\", [\"Content-Type: application/json\"], HTTPClient.METHOD_POST, user_json)
+
+
+func _on_register_clicked():
+	print(\"im sending the register\")
+	http_request.request(\"http://localhost:8081/api/auth/register\", [\"Content-Type: application/json\"], HTTPClient.METHOD_POST, user_json)
+"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource("GDScript_km8lp")
+
+[node name="Button2" type="Button" parent="."]
+offset_left = 367.0
+offset_top = 317.0
+offset_right = 511.0
+offset_bottom = 363.0
+text = "Login"
+
+[node name="Button3" type="Button" parent="."]
+offset_left = 595.0
+offset_top = 317.0
+offset_right = 739.0
+offset_bottom = 363.0
+text = "Register
+"
+
+[connection signal="pressed" from="Button2" to="." method="_on_login_clicked"]
+[connection signal="pressed" from="Button3" to="." method="_on_register_clicked"]
