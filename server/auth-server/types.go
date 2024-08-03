@@ -1,15 +1,15 @@
 package main
 
 type ApiError struct {
-	Message string `json:"message"`
-	Code    string `json:"code"`
+	Message string `json:"message,omitempty"`
+	Code    string `json:"code,omitempty"`
 }
 
 type User struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+	ID       string `json:"id,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+	Email    string `json:"email,omitempty"`
 }
 
 type AuthService struct {
@@ -28,6 +28,6 @@ type RegisterRequestBody struct {
 }
 
 type ApiResponse struct {
-	Data  interface{} `json:"data"`
-	Error ApiError    `json:"error"`
+	Data  interface{} `json:"data,omitempty"`
+	Error *ApiError   `json:"error,omitempty"`
 }

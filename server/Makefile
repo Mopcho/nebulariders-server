@@ -8,6 +8,6 @@ game-server:
 
 run-all:
 	@trap 'kill 0' SIGINT; \
-	cd auth-server && go run main.go types.go utils.go & \
+	cd auth-server && go run main.go types.go utils.go validations.go & \
 	cd game-server && go run main.go player.go & \
 	wait

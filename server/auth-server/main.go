@@ -14,7 +14,7 @@ func (s *AuthService) handleVerifyToken(w http.ResponseWriter, r *http.Request) 
 		parsedToken, err := verifyToken(token)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			sendResponse(w, ApiResponse{Error: ApiError{Message: "Invalid Token"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message: "Invalid Token"}})
 			return
 		}
 
@@ -22,7 +22,7 @@ func (s *AuthService) handleVerifyToken(w http.ResponseWriter, r *http.Request) 
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Failed to get token subject"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Failed to get token subject"}})
 			return
 		}
 
@@ -37,7 +37,7 @@ func (s *AuthService) handleVerifyToken(w http.ResponseWriter, r *http.Request) 
 
 		if !userExists {
 			w.WriteHeader(http.StatusUnauthorized)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"User for this token does not exist anymore"} })
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"User for this token does not exist anymore"} })
 			return
 		}
 
@@ -52,27 +52,27 @@ func (s *AuthService) handleLogin(w http.ResponseWriter, r *http.Request) {
 		err := getJsonBody(w, r.Body, &decodedBody)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Could not parse request body"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Could not parse request body"}})
 			return
 		}
 
 		var user, ok = s.Users[decodedBody.Email]
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Invalid Credentials"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Invalid Credentials"}})
 			return
 		}
 		
 		if user.Password != decodedBody.Password {
 			w.WriteHeader(http.StatusUnauthorized)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Invalid Credentials"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Invalid Credentials"}})
 			return
 		}
 		token, err := createToken(user.ID)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Internal Server Error"} })
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Internal Server Error"} })
 			return
 		}
 
@@ -88,13 +88,21 @@ func (s *AuthService) handleRegister(w http.ResponseWriter, r *http.Request) {
 		err := getJsonBody(w, r.Body, &decodedBody)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"Could not parse request body"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"Could not parse request body"}})
+		}
+
+		err = validateUserRegisterData(decodedBody)
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			sendResponse(w, ApiResponse{Error: &ApiError{Message: err.Error()}})
+			return
 		}
 
 		var _, ok = s.Users[decodedBody.Email]
 		if ok {
 			w.WriteHeader(http.StatusConflict)
-			sendResponse(w, ApiResponse{Error: ApiError{Message:"User with this email already exists"}})
+			sendResponse(w, ApiResponse{Error: &ApiError{Message:"User with this email already exists"}})
 			return
 		}
 
