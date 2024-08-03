@@ -1,11 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func createToken(sub string) (string, error) {
@@ -37,4 +40,18 @@ func verifyToken(tokenString string) (*jwt.Token, error) {
 	}
 
 	return token, nil
+}
+
+func hashPassword(password string) (string, error) {
+	salt, err := strconv.Atoi(os.Getenv("HASH_SALT"))
+	if err != nil {
+		return "", errors.New("failed parsing HASH_SALT from env, check your environment settings")
+	}
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), salt)
+    return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
 }
