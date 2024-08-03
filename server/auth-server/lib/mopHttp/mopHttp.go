@@ -46,6 +46,7 @@ func SendResponse(w http.ResponseWriter, data ApiResponse, status int) {
 		return
 	}
 
+	w.WriteHeader(status)
 	w.Write(bytes)
 }
 
