@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Mopcho/nebulariders-server/auth/lib/mopHttp"
+	"github.com/Mopcho/nebulariders-server/common/mopHttp"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
@@ -43,7 +43,7 @@ func (s *AuthService) handleVerifyToken(w http.ResponseWriter, r *http.Request) 
 func (s *AuthService) handleLogin(w http.ResponseWriter, r *http.Request) {
 	var decodedBody = LoginRequestBody{}
 
-	if err := mopHttp.GetJsonBody(w, r.Body, &decodedBody); err != nil {
+	if err := mopHttp.GetJsonBody(r.Body, &decodedBody); err != nil {
 		mopHttp.SendResponse(w, mopHttp.ApiResponse{Error: &mopHttp.ApiError{Message:"Could not parse request body"}}, http.StatusInternalServerError)
 		return
 	}
@@ -59,7 +59,7 @@ func (s *AuthService) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := createToken(user.ID)
+	token, err := createToken(user.ID, user.Username)
 	if err != nil {
 		mopHttp.SendResponse(w, mopHttp.ApiResponse{Error: &mopHttp.ApiError{Message:"Internal Server Error"} }, http.StatusInternalServerError)
 		return
@@ -72,7 +72,7 @@ func (s *AuthService) handleLogin(w http.ResponseWriter, r *http.Request) {
 func (s *AuthService) handleRegister(w http.ResponseWriter, r *http.Request) {
 	var decodedBody = RegisterRequestBody{}
 	
-	if err := mopHttp.GetJsonBody(w, r.Body, &decodedBody); err != nil {
+	if err := mopHttp.GetJsonBody(r.Body, &decodedBody); err != nil {
 		mopHttp.SendResponse(w, mopHttp.ApiResponse{Error: &mopHttp.ApiError{Message:"Could not parse request body"}}, http.StatusInternalServerError)
 	}
 	
