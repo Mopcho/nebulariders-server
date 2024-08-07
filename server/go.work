@@ -3,4 +3,5 @@ go 1.21.6
 use (
     ./game-server
     ./auth-server
+    ./common/mopHttp
 )
