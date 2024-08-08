@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cs6yncyn445ab"]
+[gd_scene load_steps=3 format=3 uid="uid://cs6yncyn445ab"]
 
 [ext_resource type="Script" path="res://ui/login_ui.gd" id="1_t6m8b"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_e44mb"]
+font_size = 10
 
 [node name="LoginUI" type="Control"]
 layout_mode = 3
@@ -13,7 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_t6m8b")
 
-[node name="Button3" type="Button" parent="."]
+[node name="SubmitButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = -32.0
 offset_top = 20.0
@@ -26,14 +29,15 @@ text = "Login"
 layout_mode = 0
 offset_left = -88.0
 offset_top = -116.0
-offset_right = 165.0
+offset_right = 168.0
 offset_bottom = -76.0
+focus_next = NodePath("../PasswordInput")
 
 [node name="PasswordInput" type="TextEdit" parent="."]
 layout_mode = 0
 offset_left = -88.0
 offset_top = -36.0
-offset_right = 165.0
+offset_right = 168.0
 offset_bottom = 4.0
 
 [node name="Label" type="Label" parent="."]
@@ -52,4 +56,25 @@ offset_right = -8.0
 offset_bottom = -37.0
 text = "Password"
 
-[connection signal="pressed" from="Button3" to="." method="_on_submit"]
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = -48.0
+offset_top = 84.0
+offset_right = 72.0
+offset_bottom = 100.0
+text = "Don't have an account ?"
+label_settings = SubResource("LabelSettings_e44mb")
+
+[node name="LinkButton" type="LinkButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 84.0
+offset_right = 138.0
+offset_bottom = 100.0
+theme_override_font_sizes/font_size = 10
+text = "Register Here"
+
+[connection signal="pressed" from="SubmitButton" to="." method="_on_submit"]
+[connection signal="gui_input" from="EmailInput" to="." method="_on_gui_input_forbid_tab" binds= [NodePath("./PasswordInput"), NodePath("")]]
+[connection signal="gui_input" from="PasswordInput" to="." method="_on_gui_input_forbid_tab" binds= [NodePath("./SubmitButton"), NodePath("./EmailInput")]]
+[connection signal="pressed" from="LinkButton" to="." method="_on_register_here"]

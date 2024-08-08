@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dfaj7m3ohel21"]
+
+[ext_resource type="Script" path="res://auth_scene.gd" id="1_04dgd"]
+[ext_resource type="PackedScene" uid="uid://8vpsxtdoiey6" path="res://ui/register_ui.tscn" id="1_bcyd7"]
+[ext_resource type="PackedScene" uid="uid://cs6yncyn445ab" path="res://ui/login_ui.tscn" id="2_atjh1"]
+[ext_resource type="PackedScene" uid="uid://douecpevtalxx" path="res://ui/parallax_background.tscn" id="4_1f847"]
+
+[node name="AuthScene" type="Node2D"]
+script = ExtResource("1_04dgd")
+
+[node name="RegisterUI" parent="." instance=ExtResource("1_bcyd7")]
+visible = false
+offset_left = 572.0
+offset_top = 344.0
+offset_right = 572.0
+offset_bottom = 344.0
+
+[node name="LoginUI" parent="." instance=ExtResource("2_atjh1")]
+visible = false
+offset_left = 572.0
+offset_top = 344.0
+offset_right = 572.0
+offset_bottom = 344.0
+
+[node name="ParallaxBackground" parent="." instance=ExtResource("4_1f847")]
+
+[connection signal="sign_here_pressed" from="RegisterUI" to="." method="_on_register_ui_sign_here_pressed"]
+[connection signal="submit" from="RegisterUI" to="." method="_on_register_ui_submit"]
+[connection signal="register_here_pressed" from="LoginUI" to="." method="_on_login_ui_register_here_pressed"]
+[connection signal="submit" from="LoginUI" to="." method="_on_login_ui_submit"]

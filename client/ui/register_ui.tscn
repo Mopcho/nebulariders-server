@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://8vpsxtdoiey6"]
+[gd_scene load_steps=3 format=3 uid="uid://8vpsxtdoiey6"]
 
 [ext_resource type="Script" path="res://ui/register_ui.gd" id="1_y5acc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_on73l"]
+font_size = 10
 
 [node name="RegisterUI" type="Control"]
 layout_mode = 3
@@ -13,12 +16,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_y5acc")
 
-[node name="Button3" type="Button" parent="."]
+[node name="SubmitButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = -32.0
+offset_left = -40.0
 offset_top = 100.0
-offset_right = 112.0
+offset_right = 104.0
 offset_bottom = 146.0
+focus_previous = NodePath("../PasswordInput")
 mouse_default_cursor_shape = 2
 text = "Register
 "
@@ -27,22 +31,27 @@ text = "Register
 layout_mode = 0
 offset_left = -88.0
 offset_top = -116.0
-offset_right = 165.0
+offset_right = 168.0
 offset_bottom = -76.0
+focus_next = NodePath("../EmailInput")
 
 [node name="EmailInput" type="TextEdit" parent="."]
 layout_mode = 0
 offset_left = -88.0
 offset_top = -36.0
-offset_right = 165.0
+offset_right = 168.0
 offset_bottom = 4.0
+focus_next = NodePath("../PasswordInput")
+focus_previous = NodePath(".")
 
 [node name="PasswordInput" type="TextEdit" parent="."]
 layout_mode = 0
 offset_left = -88.0
 offset_top = 44.0
-offset_right = 165.0
+offset_right = 168.0
 offset_bottom = 84.0
+focus_next = NodePath("../SubmitButton")
+focus_previous = NodePath("../EmailInput")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
@@ -68,4 +77,26 @@ offset_right = -8.0
 offset_bottom = 43.0
 text = "Password"
 
-[connection signal="pressed" from="Button3" to="." method="_on_submit"]
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = -56.0
+offset_top = 156.0
+offset_right = 72.0
+offset_bottom = 172.0
+text = "Already have an account ?"
+label_settings = SubResource("LabelSettings_on73l")
+
+[node name="LinkButton" type="LinkButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 156.0
+offset_right = 120.0
+offset_bottom = 172.0
+theme_override_font_sizes/font_size = 10
+text = "Sign Here"
+
+[connection signal="pressed" from="SubmitButton" to="." method="_on_submit"]
+[connection signal="gui_input" from="UsernameInput" to="." method="_on_gui_input_forbid_tab" binds= [NodePath("./EmailInput"), NodePath("")]]
+[connection signal="gui_input" from="EmailInput" to="." method="_on_gui_input_forbid_tab" binds= [NodePath("./PasswordInput"), NodePath("./UsernameInput")]]
+[connection signal="gui_input" from="PasswordInput" to="." method="_on_gui_input_forbid_tab" binds= [NodePath("./SubmitButton"), NodePath("./EmailInput")]]
+[connection signal="pressed" from="LinkButton" to="." method="_on_sign_here"]
