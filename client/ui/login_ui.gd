@@ -1,33 +1,21 @@
 extends Control
 
-var http_request = HTTPRequest.new()
-
-const JSON_HEADERS = ["Content-Type: application/json"];
-const BASE_URL = "http://localhost:8081";
+signal submit(email: String, password: String)
+signal register_here_pressed
 
 func _ready():
-	add_child(http_request)
-	http_request.request_completed.connect(self._on_request_completed)
-
-func _on_request_completed(result, response_code, headers, body):
-	var json = JSON.parse_string(body.get_string_from_utf8())
-	
-	if response_code == 200:
-		print("YOU ARE NOW LOGGED!")
+	$EmailInput.grab_focus()
 
 func _on_submit():
-	print("POST /api/auth/login")
-	var url = "{BASE_URL}/api/auth/login".format({"BASE_URL": BASE_URL})
-	
-	var login_data = JSON.new().stringify(
-		{ 
-			"email": $EmailInput.text,
-			"password": $PasswordInput.text 
-		}
-	)
-	
-	print(login_data)
-	
-	var result = http_request.request(url, JSON_HEADERS, HTTPClient.METHOD_POST, login_data);
-	
-	print(result);
+	submit.emit($EmailInput.text, $PasswordInput.text)
+
+func _on_register_here():
+	register_here_pressed.emit()
+
+func _on_gui_input_forbid_tab(event, next_node, prev_node):
+	if (event.is_action_pressed("ui_focus_prev")):
+		get_node(prev_node).grab_focus()
+		self.accept_event()
+	elif (event.is_action_pressed("ui_focus_next")):
+		get_node(next_node).grab_focus()
+		self.accept_event()
