@@ -53,6 +53,15 @@ func NewServerPlayerPositionMsg(position Position) PlayerPositionWSMessageStruct
 	return PlayerPositionWSMessageStruct{Type: "death", X: position.X, Y: position.Y}
 }
 
+type WorldStateWSMessage struct {
+	Type       string     `json:"type"`
+	WorldState WorldState `json:"worldState"`
+}
+
+func NewServerWorldStateMessage(state WorldState) WorldStateWSMessage {
+	return WorldStateWSMessage{Type: "world_state", WorldState: state}
+}
+
 type WorldState struct {
 	Players map[string]*Player `json:"players"`
 }
