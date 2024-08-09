@@ -34,7 +34,7 @@ func NewPlayer(id string, username string, game *Game, conn *websocket.Conn) *Pl
 
 func (s *Player) ReadPump() {
 	go func() {
-		ticker := time.NewTicker(time.Microsecond * 50)
+		ticker := time.NewTicker(time.Millisecond * 50)
 		for range ticker.C {
 			_, bytes, err := s.Conn.ReadMessage()
 
@@ -81,10 +81,10 @@ func (s *Player) receive(msg interface{}) {
 
 func (s *Player) SendPump() {
 	go func() {
-		ticker := time.NewTicker(time.Millisecond * 500)
+		ticker := time.NewTicker(time.Millisecond * 50)
 		for range ticker.C {
 			playersWithoutMe := filterPlayers(s.Game.Players, s.ID)
-			_ = s.Conn.WriteJSON(NewServerWorldStateMessage(WorldState{Players: playersWithoutMe}))
+			_ = s.Conn.WriteJSON(NewServerWorldStateMessage(WorldState{Players: playersWithoutMe, Me: *s}))
 		}
 	}()
 }

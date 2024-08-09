@@ -55,7 +55,7 @@ func NewServerPlayerPositionMsg(position Position) PlayerPositionWSMessageStruct
 
 type WorldStateWSMessage struct {
 	Type       string     `json:"type"`
-	WorldState WorldState `json:"worldState"`
+	WorldState WorldState `json:"data"`
 }
 
 func NewServerWorldStateMessage(state WorldState) WorldStateWSMessage {
@@ -64,4 +64,5 @@ func NewServerWorldStateMessage(state WorldState) WorldStateWSMessage {
 
 type WorldState struct {
 	Players map[string]*Player `json:"players"`
+	Me      Player             `json:"me"`
 }
