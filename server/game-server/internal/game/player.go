@@ -39,7 +39,7 @@ func (s *Player) ReadPump() {
 			_, bytes, err := s.Conn.ReadMessage()
 
 			if err != nil {
-				fmt.Println("Error reading message bytes, not proccessing it")
+				fmt.Println(err)
 				_ = s.Conn.Close()
 				return
 			}
@@ -64,6 +64,12 @@ func (s *Player) receive(msg interface{}) {
 		s.Health -= m.Damage
 		if s.Health <= 0 {
 			_ = s.Conn.WriteJSON(NewServerPlayerDeathMsg())
+			delete(s.Game.Players, s.ID)
+			err := s.Conn.Close()
+			if err != nil {
+				return
+			}
+			return
 		}
 	case PositionMessage:
 		s.X = m.X
@@ -77,7 +83,20 @@ func (s *Player) SendPump() {
 	go func() {
 		ticker := time.NewTicker(time.Millisecond * 500)
 		for range ticker.C {
-			_ = s.Conn.WriteJSON(WorldState{Players: s.Game.Players})
+			playersWithoutMe := filterPlayers(s.Game.Players, s.ID)
+			_ = s.Conn.WriteJSON(NewServerWorldStateMessage(WorldState{Players: playersWithoutMe}))
 		}
 	}()
+}
+
+func filterPlayers(players map[string]*Player, playerId string) map[string]*Player {
+	newMap := make(map[string]*Player)
+
+	for key, value := range players {
+		if key != playerId {
+			newMap[key] = value
+		}
+	}
+
+	return newMap
 }

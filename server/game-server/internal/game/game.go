@@ -2,17 +2,16 @@ package gamecore
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type Game struct {
 	Players map[string]*Player
-	Channel chan Message
 }
 
 func NewGame() *Game {
 	return &Game{
 		Players: make(map[string]*Player),
-		Channel: make(chan Message),
 	}
 }
 
@@ -22,17 +21,20 @@ func (s *Game) receive(msg Message) {
 		attackMessage := AttackMessage{}
 		err := json.Unmarshal(msg.Data, &attackMessage)
 		if err != nil {
-			panic(err) // TODO: Handle properly
+			fmt.Println(err)
+			break
 		}
 		if _, ok := s.Players[attackMessage.EnemyToAttackID]; !ok {
-			break // TODO: Handle properly
+			fmt.Println("No player with this id")
+			break
 		}
 		s.Players[attackMessage.EnemyToAttackID].receive(PlayerReceiveDamageMessage{Damage: 10})
 	case "position":
 		positionMessage := PositionMessage{}
 		err := json.Unmarshal(msg.Data, &positionMessage)
 		if err != nil {
-			panic(err) // TODO: Handle properly
+			fmt.Println(err)
+			break
 		}
 		s.Players[msg.PlayerID].receive(positionMessage)
 	}
