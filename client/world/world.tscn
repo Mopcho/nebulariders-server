@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwr0svqbmr25d"]
+[gd_scene load_steps=11 format=3 uid="uid://bwr0svqbmr25d"]
 
 [ext_resource type="Script" path="res://world/world.gd" id="1_5swk5"]
 [ext_resource type="Script" path="res://world/Player.gd" id="1_307qj"]
@@ -6,8 +6,14 @@
 [ext_resource type="Script" path="res://world/report_position_to_ws.gd" id="3_4yxnr"]
 [ext_resource type="Texture2D" uid="uid://cyy5rdst2047v" path="res://assets/bg/Blue_Nebula_08-1024x1024.png" id="3_v0m4a"]
 [ext_resource type="Script" path="res://world/Entities.gd" id="6_8l18c"]
+[ext_resource type="Script" path="res://world/parallax_background.gd" id="7_mxh0a"]
+[ext_resource type="Texture2D" uid="uid://dxksrga7vebpc" path="res://assets/bg/Starfield_03-1024x1024.png" id="7_phu3u"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_npncn"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yayvx"]
+blend_mode = 1
+light_mode = 1
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_5swk5")
@@ -37,13 +43,28 @@ texture = ExtResource("2_w1i8a")
 script = ExtResource("3_4yxnr")
 metadata/PlayerNodePath = NodePath("..")
 
-[node name="BlueNebula08-1024x1024" type="Sprite2D" parent="."]
-z_index = -1
-position = Vector2(516, 321)
-texture = ExtResource("3_v0m4a")
-
 [node name="Entities" type="Node2D" parent="."]
 script = ExtResource("6_8l18c")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+script = ExtResource("7_mxh0a")
+boundary = 8000
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="Sprite1" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture_repeat = 3
+texture = ExtResource("3_v0m4a")
+region_enabled = true
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.9, 0.9)
+
+[node name="Sprite2" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
+texture_repeat = 3
+material = SubResource("CanvasItemMaterial_yayvx")
+texture = ExtResource("7_phu3u")
+region_enabled = true
 
 [connection signal="websocket_open" from="." to="Player/ReportPositionToWS" method="_on_world_websocket_open"]
 [connection signal="websocket_packet" from="." to="Entities" method="_on_world_websocket_packet"]
