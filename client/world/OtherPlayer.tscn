@@ -1,8 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://bc2wukoipfpiw"]
+[gd_scene load_steps=3 format=3 uid="uid://bc2wukoipfpiw"]
 
+[ext_resource type="Script" path="res://world/OtherPlayer.gd" id="1_d0nml"]
 [ext_resource type="Texture2D" uid="uid://bbkyf22tq5bdc" path="res://assets/ship/Main Ship - Base - Full health.png" id="1_tmbvg"]
 
-[node name="OtherPlayer" type="Node2D"]
+[node name="OtherPlayer" type="CharacterBody2D"]
+script = ExtResource("1_d0nml")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Label" type="Label" parent="."]
+offset_left = -22.0
+offset_top = -40.0
+offset_right = 18.0
+offset_bottom = -17.0
+text = "gay"
+
+[node name="SpriteWrapper" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteWrapper"]
+rotation = 1.5708
 texture = ExtResource("1_tmbvg")
