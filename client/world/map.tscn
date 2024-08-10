@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=3 uid="uid://bkbu7jel0bivr"]
+
+[ext_resource type="Script" path="res://world/map.gd" id="1_qlig5"]
+[ext_resource type="Texture2D" uid="uid://cyy5rdst2047v" path="res://assets/bg/Blue_Nebula_08-1024x1024.png" id="2_g4j2m"]
+[ext_resource type="Texture2D" uid="uid://dxksrga7vebpc" path="res://assets/bg/Starfield_03-1024x1024.png" id="3_ra8gi"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yayvx"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u7enj"]
+size = Vector2(4080, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gixwx"]
+size = Vector2(40, 4000)
+
+[node name="Map" type="ParallaxBackground"]
+script = ExtResource("1_qlig5")
+map_boundary = 4000
+map_border_width = 40
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="ParallaxLayer"]
+texture_repeat = 3
+texture = ExtResource("2_g4j2m")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.9, 0.9)
+
+[node name="Sprite" type="Sprite2D" parent="ParallaxLayer2"]
+texture_repeat = 3
+material = SubResource("CanvasItemMaterial_yayvx")
+texture = ExtResource("3_ra8gi")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="BorderTop" type="StaticBody2D" parent="."]
+position = Vector2(0, -2020)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BorderTop"]
+shape = SubResource("RectangleShape2D_u7enj")
+
+[node name="BorderRight" type="StaticBody2D" parent="."]
+position = Vector2(2020, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BorderRight"]
+shape = SubResource("RectangleShape2D_gixwx")
+
+[node name="BorderBottom" type="StaticBody2D" parent="."]
+position = Vector2(0, 2020)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BorderBottom"]
+shape = SubResource("RectangleShape2D_u7enj")
+
+[node name="BorderLeft" type="StaticBody2D" parent="."]
+position = Vector2(-2020, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BorderLeft"]
+shape = SubResource("RectangleShape2D_gixwx")
