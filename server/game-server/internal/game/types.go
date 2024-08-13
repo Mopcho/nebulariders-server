@@ -11,13 +11,14 @@ type SocketMessage struct {
 
 type Message struct {
 	Type     string `json:"type"`
-	PlayerID string `json:"playerId"`
+	PlayerID string `json:"player_id"`
 	Data     []byte
 }
 
 type AttackMessage struct {
 	Message
-	EnemyToAttackID string `json:"enemyToAttackId"`
+	EnemyToAttackID string `json:"enemy_to_attack_id"`
+	AttackType      string `json:"attack_type"`
 }
 
 type PositionMessage struct {
@@ -27,7 +28,19 @@ type PositionMessage struct {
 }
 
 type PlayerReceiveDamageMessage struct {
-	Damage int
+	Type       string  `json:"type"`
+	Damage     int     `json:"damage"`
+	From       *Player `json:"from"`
+	AttackType string  `json:"attack_type"`
+}
+
+func newPlayerReceiveDamageMessage(damage int, from *Player, attackType string) *PlayerReceiveDamageMessage {
+	return &PlayerReceiveDamageMessage{
+		Type:       "receive_damage",
+		From:       from,
+		Damage:     damage,
+		AttackType: attackType,
+	}
 }
 
 type PlayerDeathWSMessageStruct struct {
