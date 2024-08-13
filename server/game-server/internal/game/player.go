@@ -11,7 +11,7 @@ import (
 type Player struct {
 	ID         string          `json:"id"`
 	Username   string          `json:"username"`
-	BaseAttack int             `json:"baseAttack"`
+	BaseAttack int             `json:"base_attack"`
 	Health     int             `json:"health"`
 	Conn       *websocket.Conn `json:"-"`
 	Game       *Game           `json:"-"`
@@ -61,6 +61,10 @@ func (s *Player) ReadPump() {
 func (s *Player) receive(msg interface{}) {
 	switch m := msg.(type) {
 	case PlayerReceiveDamageMessage:
+		err := s.Conn.WriteJSON(newPlayerReceiveDamageMessage(m.Damage, m.From, m.AttackType))
+		if err != nil {
+			return
+		}
 		s.Health -= m.Damage
 		if s.Health <= 0 {
 			_ = s.Conn.WriteJSON(NewServerPlayerDeathMsg())

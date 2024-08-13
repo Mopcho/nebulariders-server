@@ -24,11 +24,12 @@ func (s *Game) receive(msg Message) {
 			fmt.Println(err)
 			break
 		}
-		if _, ok := s.Players[attackMessage.EnemyToAttackID]; !ok {
+		attackedFrom, ok := s.Players[attackMessage.EnemyToAttackID]
+		if !ok {
 			fmt.Println("No player with this id")
 			break
 		}
-		s.Players[attackMessage.EnemyToAttackID].receive(PlayerReceiveDamageMessage{Damage: 10})
+		s.Players[attackMessage.EnemyToAttackID].receive(PlayerReceiveDamageMessage{Damage: 10, From: attackedFrom, AttackType: attackMessage.AttackType})
 	case "position":
 		positionMessage := PositionMessage{}
 		err := json.Unmarshal(msg.Data, &positionMessage)
